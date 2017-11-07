@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace FindMeOnlyForWin
 {
@@ -11,6 +12,9 @@ namespace FindMeOnlyForWin
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        float screenWidth;
+        float screenHeight;
 
         public Game1()
         {
@@ -26,9 +30,17 @@ namespace FindMeOnlyForWin
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
+
+            // graphics.ToggleFullScreen();  //Fullscreen mode
+            
+            if (graphics.IsFullScreen) Console.WriteLine("\n***POLNII***\n");
+            else  Console.WriteLine("\n***NE POLNII***\n");
+
+           
+            this.IsMouseVisible = false;
+
+           
         }
 
         /// <summary>
