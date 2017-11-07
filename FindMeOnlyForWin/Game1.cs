@@ -38,7 +38,7 @@ namespace FindMeOnlyForWin
             else  Console.WriteLine("\n***NE POLNII***\n");
 
            
-            this.IsMouseVisible = false;
+            this.IsMouseVisible = false; //видимость курсора в игре
 
            
         }
