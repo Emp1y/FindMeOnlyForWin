@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System;
 
 
@@ -12,6 +13,7 @@ namespace FindMeOnlyForWin
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
+        Song stepSound;
         SpriteBatch spriteBatch;
         SpriteClass hero;
 
@@ -27,6 +29,7 @@ namespace FindMeOnlyForWin
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            
           //  Content.RootDirectory = "Content";
         }
 
@@ -56,7 +59,7 @@ namespace FindMeOnlyForWin
             gameStarted = false;
             spaceDown = false;
             gameOver = false;
-            heroSpeed = 100f;
+            heroSpeed = 20f;
         }                                        
 
         /// <summary>
@@ -69,10 +72,21 @@ namespace FindMeOnlyForWin
             spriteBatch = new SpriteBatch(GraphicsDevice);
  
             hero = new SpriteClass(GraphicsDevice, "Content/hero.png", 1f);
-
+            this.stepSound = Content.Load<Song>("Content/Sounds/steps_with_echo");
+            
+            MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
+            MediaPlayer.Play(stepSound);
             // TODO: use this.Content to load your game content here
         }
 
+        /**Настройки плеера для воспроиведения звука**/
+        void MediaPlayer_MediaStateChanged(object sender, EventArgs e)
+        {
+            // 0.0f is silent, 1.0f is full volume
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Volume = 0.5f;
+     
+        }
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
         /// game-specific content.

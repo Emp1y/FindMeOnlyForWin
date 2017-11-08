@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\hero.png" />
+    <Content Include="Content\Sounds\steps_with_echo.mp3" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>

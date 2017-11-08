@@ -25,3 +25,9 @@
 /processorParam:TextureFormat=Color
 /build:hero.png
 
+#begin Sounds/steps_with_echo.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sounds/steps_with_echo.mp3
+
