@@ -61,13 +61,13 @@ namespace FindMeOnlyForWin
         {
       
             this.scale = scale;
-             //Content.RootDirectory = "Content";
+             
             if (texture == null)
             {
-                using (var stream = TitleContainer.OpenStream(textureName))
-                {
-                    texture = Texture2D.FromStream(graphicsDevice, stream);
-                }
+                var stream = TitleContainer.OpenStream(textureName);
+              
+                texture = Texture2D.FromStream(graphicsDevice, stream);
+                
             }
         }
 

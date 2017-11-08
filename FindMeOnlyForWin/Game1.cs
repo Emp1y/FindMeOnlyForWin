@@ -19,13 +19,15 @@ namespace FindMeOnlyForWin
         float screenHeight;
 
         bool gameStarted;
-
+        bool spaceDown;
+        bool gameOver;
         float heroSpeed;
+
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
+          //  Content.RootDirectory = "Content";
         }
 
         /// <summary>
@@ -52,7 +54,9 @@ namespace FindMeOnlyForWin
             screenWidth = 800;
 
             gameStarted = false;
-            heroSpeed = 1f;
+            spaceDown = false;
+            gameOver = false;
+            heroSpeed = 100f;
         }                                        
 
         /// <summary>
@@ -63,8 +67,8 @@ namespace FindMeOnlyForWin
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-           // hero = Content.Load<Texture2D>("hero");
-            hero = new SpriteClass(GraphicsDevice, "hero.xnb", 1f);
+ 
+            hero = new SpriteClass(GraphicsDevice, "Content/hero.png", 1f);
 
             // TODO: use this.Content to load your game content here
         }
@@ -85,23 +89,39 @@ namespace FindMeOnlyForWin
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
+            float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            KeyboardHandler(); // Включаем отслеживание клавиш
+            
             // TODO: Add your update logic here
-
+            hero.Update(elapsedTime);
             base.Update(gameTime);
+
+            /* границы экрана
+            if (dino.x > screenWidth - dino.texture.Width / 2)
+            {
+                dino.x = screenWidth - dino.texture.Width / 2;
+                dino.dX = 0;
+            }
+            if (dino.x < 0 + dino.texture.Width / 2)
+            {
+                dino.x = 0 + dino.texture.Width / 2;
+                dino.dX = 0;
+            }
+            */
+
         }
 
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        /**Отрисовка сцены**/
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-           // spriteBatch.Draw(hero, new Rectangle(0, 0, 48, 48), Color.White);
+          
+            hero.Draw(spriteBatch);
             spriteBatch.End();
 
             // TODO: Add your drawing code here
@@ -113,6 +133,38 @@ namespace FindMeOnlyForWin
         {
           hero.x = screenWidth / 2;
           hero.y = screenHeight / 2;
+        }
+
+        /**Ввод с клавиатуры**/
+        void KeyboardHandler()
+        {
+            KeyboardState state = Keyboard.GetState();
+
+            // Quit the game if Escape is pressed.
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
+
+            // Start the game if Space is pressed.
+            if (!gameStarted)
+            {
+                if (state.IsKeyDown(Keys.Space))
+                {
+                    StartGame();
+                    gameStarted = true;
+                    
+                    gameOver = false;
+                }
+                return;
+            }
+  
+
+            // Handle left and right
+            if (state.IsKeyDown(Keys.Left)) hero.dX = heroSpeed * -1;
+            else if (state.IsKeyDown(Keys.Right)) hero.dX = heroSpeed;
+                    else hero.dX = 0;
+            if (state.IsKeyDown(Keys.Up)) hero.dY = heroSpeed * -1;
+            else if (state.IsKeyDown(Keys.Down)) hero.dY = heroSpeed;
+                  else hero.dY = 0;
         }
 
     }
