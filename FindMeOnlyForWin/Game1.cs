@@ -62,10 +62,7 @@ namespace FindMeOnlyForWin
             heroSpeed = 20f;
         }                                        
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
+
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
@@ -75,22 +72,19 @@ namespace FindMeOnlyForWin
             this.stepSound = Content.Load<Song>("Content/Sounds/steps_with_echo");
             
             MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
-            MediaPlayer.Play(stepSound);
-            // TODO: use this.Content to load your game content here
+            
+       
         }
 
         /**Настройки плеера для воспроиведения звука**/
         void MediaPlayer_MediaStateChanged(object sender, EventArgs e)
         {
             // 0.0f is silent, 1.0f is full volume
-            MediaPlayer.IsRepeating = true;
+            MediaPlayer.IsRepeating = false;
             MediaPlayer.Volume = 0.5f;
-     
+            
         }
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
-        /// </summary>
+   
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
@@ -100,7 +94,7 @@ namespace FindMeOnlyForWin
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+     
         protected override void Update(GameTime gameTime)
         {
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -125,10 +119,7 @@ namespace FindMeOnlyForWin
 
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+       
         /**Отрисовка сцены**/
         protected override void Draw(GameTime gameTime)
         {
@@ -137,8 +128,6 @@ namespace FindMeOnlyForWin
           
             hero.Draw(spriteBatch);
             spriteBatch.End();
-
-            // TODO: Add your drawing code here
 
             base.Draw(gameTime);
         }
@@ -171,14 +160,36 @@ namespace FindMeOnlyForWin
                 return;
             }
   
+            
+            if (state.IsKeyDown(Keys.Left)) 
+                {   
+                   hero.dX = heroSpeed * -1; 
+                }
+            else if (state.IsKeyDown(Keys.Right)) 
+				{
+					hero.dX = heroSpeed;
+				}
+                 else 
+				 {
+					hero.dX = 0;
+				 } 
+           
+          if (state.IsKeyDown(Keys.Up)) 
+                {   
+                   hero.dY = heroSpeed * -1; 
+                }
+            else if (state.IsKeyDown(Keys.Down)) 
+				{
+					hero.dY = heroSpeed;
+				}
+                 else 
+				 {
+					hero.dY = 0;
+				 } 
 
-            // Handle left and right
-            if (state.IsKeyDown(Keys.Left)) hero.dX = heroSpeed * -1;
-            else if (state.IsKeyDown(Keys.Right)) hero.dX = heroSpeed;
-                    else hero.dX = 0;
-            if (state.IsKeyDown(Keys.Up)) hero.dY = heroSpeed * -1;
-            else if (state.IsKeyDown(Keys.Down)) hero.dY = heroSpeed;
-                  else hero.dY = 0;
+		//**звук шагов**//
+		  if ((hero.dX!=0 || hero.dY!=0) && MediaPlayer.State.Equals(MediaState.Stopped)) MediaPlayer.Play(stepSound);
+		  if(hero.dY == 0 && hero.dX == 0) MediaPlayer.Stop();
         }
 
     }
