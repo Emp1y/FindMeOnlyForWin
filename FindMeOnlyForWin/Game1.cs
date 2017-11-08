@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 
+
 namespace FindMeOnlyForWin
 {
     /// <summary>
@@ -12,9 +13,14 @@ namespace FindMeOnlyForWin
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        SpriteClass hero;
 
         float screenWidth;
         float screenHeight;
+
+        bool gameStarted;
+
+        float heroSpeed;
 
         public Game1()
         {
@@ -28,20 +34,26 @@ namespace FindMeOnlyForWin
         /// related content.  Calling base.Initialize will enumerate through any components
         /// and initialize them as well.
         /// </summary>
+
+
+
         protected override void Initialize()
         {
             base.Initialize();
-
+            
             // graphics.ToggleFullScreen();  //Fullscreen mode
             
             if (graphics.IsFullScreen) Console.WriteLine("\n***POLNII***\n");
             else  Console.WriteLine("\n***NE POLNII***\n");
 
-           
             this.IsMouseVisible = false; //видимость курсора в игре
 
-           
-        }
+            screenHeight = 600;
+            screenWidth = 800;
+
+            gameStarted = false;
+            heroSpeed = 1f;
+        }                                        
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -51,6 +63,8 @@ namespace FindMeOnlyForWin
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+           // hero = Content.Load<Texture2D>("hero");
+            hero = new SpriteClass(GraphicsDevice, "hero.xnb", 1f);
 
             // TODO: use this.Content to load your game content here
         }
@@ -86,10 +100,20 @@ namespace FindMeOnlyForWin
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin();
+           // spriteBatch.Draw(hero, new Rectangle(0, 0, 48, 48), Color.White);
+            spriteBatch.End();
 
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
         }
+
+        public void StartGame()
+        {
+          hero.x = screenWidth / 2;
+          hero.y = screenHeight / 2;
+        }
+
     }
 }
