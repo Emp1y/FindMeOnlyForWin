@@ -73,9 +73,10 @@ namespace FindMeOnlyForWin
 
         public void Update(float elapsedTime)
         {
+			this.angle += this.dA * elapsedTime;
             this.x += this.dX * elapsedTime;
             this.y += this.dY * elapsedTime;
-            this.angle += this.dA * elapsedTime;
+           
         }
 
         public void Draw(SpriteBatch spriteBatch)

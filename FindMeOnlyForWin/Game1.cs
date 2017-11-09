@@ -16,6 +16,8 @@ namespace FindMeOnlyForWin
         Song stepSound;
         SpriteBatch spriteBatch;
         SpriteClass hero;
+		MouseState lastMouseState;
+
 
         float screenWidth;
         float screenHeight;
@@ -48,13 +50,16 @@ namespace FindMeOnlyForWin
             
             // graphics.ToggleFullScreen();  //Fullscreen mode
             
-            if (graphics.IsFullScreen) Console.WriteLine("\n***POLNII***\n");
-            else  Console.WriteLine("\n***NE POLNII***\n");
+            
 
             this.IsMouseVisible = false; //видимость курсора в игре
 
-            screenHeight = 600;
-            screenWidth = 800;
+
+            screenHeight = Window.ClientBounds.Height;
+            screenWidth = Window.ClientBounds.Width;
+
+			if (graphics.IsFullScreen) Console.WriteLine("\n***POLNII***\n");
+            else  Console.WriteLine("\n***NE POLNII***\n" + screenHeight + "x" + screenWidth);
 
             gameStarted = false;
             spaceDown = false;
@@ -98,7 +103,8 @@ namespace FindMeOnlyForWin
         protected override void Update(GameTime gameTime)
         {
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            KeyboardHandler(); // Включаем отслеживание клавиш
+
+            IOHandler(); // Включаем отслеживание клавиш
             
             // TODO: Add your update logic here
             hero.Update(elapsedTime);
@@ -138,10 +144,11 @@ namespace FindMeOnlyForWin
           hero.y = screenHeight / 2;
         }
 
-        /**Ввод с клавиатуры**/
-        void KeyboardHandler()
+        /**Управление и звук**/
+        void IOHandler()
         {
-            KeyboardState state = Keyboard.GetState();
+            
+			KeyboardState state = Keyboard.GetState();
 
             // Quit the game if Escape is pressed.
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -158,12 +165,13 @@ namespace FindMeOnlyForWin
                     gameOver = false;
                 }
                 return;
-            }
-  
+            } 
             
             if (state.IsKeyDown(Keys.Left)) 
                 {   
-                   hero.dX = heroSpeed * -1; 
+					
+                    hero.dX = heroSpeed * -1; 
+					
                 }
             else if (state.IsKeyDown(Keys.Right)) 
 				{
@@ -174,19 +182,33 @@ namespace FindMeOnlyForWin
 					hero.dX = 0;
 				 } 
            
-          if (state.IsKeyDown(Keys.Up)) 
+			if (state.IsKeyDown(Keys.Up)) 
                 {   
-                   hero.dY = heroSpeed * -1; 
+                    hero.dY = heroSpeed * -1 * (float)(Math.Cos(hero.angle)); 
+					hero.dX = heroSpeed * (float)(Math.Sin(hero.angle));
                 }
             else if (state.IsKeyDown(Keys.Down)) 
 				{
-					hero.dY = heroSpeed;
+					hero.dY = heroSpeed * (float)(Math.Cos(hero.angle));
+					hero.dX = heroSpeed * -1 * (float)(Math.Sin(hero.angle));
 				}
                  else 
 				 {
 					hero.dY = 0;
 				 } 
-
+			
+			
+		//**Управление мышью**//
+		
+		MouseState currentMouseState = Mouse.GetState();
+			// if (!GraphicsDevice.Viewport.Bounds.Contains(currentMouseState.X, currentMouseState.Y)) Mouse.SetPosition((int)screenHeight/2,(int)screenWidth/2);
+			//Mouse.SetPosition(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2);
+		if (currentMouseState.X < lastMouseState.X)
+            hero.angle -= 0.05f;
+		else if (currentMouseState.X > lastMouseState.X)
+			hero.angle += 0.05f;
+        lastMouseState = currentMouseState;
+		//Mouse.SetPosition((int)screenHeight/2,(int)screenWidth/2);
 		//**звук шагов**//
 		  if ((hero.dX!=0 || hero.dY!=0) && MediaPlayer.State.Equals(MediaState.Stopped)) MediaPlayer.Play(stepSound);
 		  if(hero.dY == 0 && hero.dX == 0) MediaPlayer.Stop();
